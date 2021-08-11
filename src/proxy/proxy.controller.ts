@@ -1,10 +1,7 @@
 import { HttpService } from '@nestjs/axios';
-import { All, Controller, Get, Param, Query, Req, Res} from '@nestjs/common';
-import {Request, Response} from 'express';
-import {AxiosRequestConfig, AxiosResponse, AxiosError} from 'axios';
-import { Observable, Observer, of, throwError, pipe, interval, empty } from 'rxjs';
-import { catchError, switchMap, tap } from 'rxjs/operators';
-import { fromEvent } from 'rxjs';
+import { All, Controller, Param, Query, Req} from '@nestjs/common';
+import {Request} from 'express';
+import {AxiosRequestConfig} from 'axios';
 
 function assign(target: any, source: any, noSetFnc?: (key: string, value: any) => boolean) {
   noSetFnc = noSetFnc || (() => true);
@@ -33,32 +30,27 @@ export class ProxyController {
 
   constructor(private http: HttpService) {}
 
+  @All(':url(*)')
+  async sendProxy(@Param('url') url: string, @Req() req: Request) {
+    //let query = req.query;
 
-  @Get()
-  async sendProxy(@Query('url') url: string, @Req() req: Request, @Res() res: Response) {
-
-    let headers = {
-      'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36'
-    };
     let configReq: AxiosRequestConfig = {
       method: 'get',
       url: url,
-      //params: req.query,
+      params: req.query,
       headers: getHeaderFromRequest(req.headers)
     };
     
-    console.log(url);
 
-    let resp = await this.http.request(configReq).pipe(
-      catchError((e: AxiosError) => {
-        console.log(e);
-        
-        return of({status: 500, data: 'error server'})
-      })).toPromise();
+    return this.http.request(configReq).toPromise()
+      .then(s => s.status)
+      .catch(() => {
+        console.log(`error url: ${url}`);
+        return Promise.reject('xay ra loi: 500');
+      })
+    
 
-    return res//.status(resp.status)
-     // .header(resp.headers)
-      .send(resp.data);
+  
   }
 
  
