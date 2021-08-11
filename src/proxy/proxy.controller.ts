@@ -22,13 +22,13 @@ function getHeaderFromRequest(header: any) {
   'true-client-ip','connection',
    'cf-ipcountry', 'cf-ray', 'cf-visitor', 'cf-ew-via', 
    'cdn-loop', 'cf-connecting-ip', 'cf-worker',
-   'sec-ch-ua'
+   //'sec-ch-ua'
   ];
   return assign({}, header, (k:string) => headerIdDel.includes(k));
 }
 
 
-@Controller("proxy")
+@Controller()//("proxy")
 export class ProxyController {
 
   constructor(private http: HttpService) {}
@@ -43,9 +43,8 @@ export class ProxyController {
     let configReq: AxiosRequestConfig = {
       method: 'get',
       url: url,
-      headers: headers
       //params: req.query,
-      //headers: getHeaderFromRequest(req.headers)
+      headers: getHeaderFromRequest(req.headers)
     };
     
     console.log(url);
