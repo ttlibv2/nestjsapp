@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
-import { All, Controller, Param, Query, Req} from '@nestjs/common';
-import {Request} from 'express';
+import { All, Controller, Param, Query, Req, Res} from '@nestjs/common';
+import {Request, Response} from 'express';
 import {AxiosRequestConfig} from 'axios';
 
 function assign(target: any, source: any, noSetFnc?: (key: string, value: any) => boolean) {
@@ -25,29 +25,26 @@ function getHeaderFromRequest(header: any) {
 }
 
 
-@Controller()//("proxy")
+@Controller("proxy")
 export class ProxyController {
 
   constructor(private http: HttpService) {}
 
   @All(':url(*)')
-  async sendProxy(@Param('url') url: string, @Req() req: Request) {
+  sendProxy(@Param('url') url: string, @Req() req: Request):Promise<any> {
     //let query = req.query;
 
     let configReq: AxiosRequestConfig = {
       method: 'get',
       url: url,
       params: req.query,
+      responseType: 'document',
       headers: getHeaderFromRequest(req.headers)
     };
     
 
     return this.http.request(configReq).toPromise()
-      .then(s => Promise.resolve(s.status))
-      .catch(() => {
-        console.log(`error url: ${url}`);
-        //return Promise.reject('xay ra loi: 500');
-      })
+    .then(s => s.data);
     
 
   
