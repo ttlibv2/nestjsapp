@@ -13,6 +13,7 @@ const httpModuleOption: HttpModuleOptions = {
 
 @Module({
  imports:[ HttpModule.register(httpModuleOption)],
-  controllers: [ProxyController]
+  controllers: [ProxyController],
+  exports: []
 })
 export class ProxyModule {}

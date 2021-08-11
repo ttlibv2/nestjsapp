@@ -38,13 +38,13 @@ export class ProxyController {
       method: 'get',
       url: url,
       params: req.query,
-      responseType: 'document',
+      responseType: 'text',
       headers: getHeaderFromRequest(req.headers)
     };
     
 
-    const s = await this.http.request(configReq).toPromise();
-    return s.data;
+    await this.http.request(configReq).toPromise();
+    return 's.data';
   }
 
  
