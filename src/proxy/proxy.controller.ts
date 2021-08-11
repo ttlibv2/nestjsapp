@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { All, Controller, Param, Query, Req, Res} from '@nestjs/common';
+import { All, Controller, Get, Param, Query, Req, Res} from '@nestjs/common';
 import {Request, Response} from 'express';
 import {AxiosRequestConfig} from 'axios';
 
@@ -30,8 +30,8 @@ export class ProxyController {
 
   constructor(private http: HttpService) {}
 
-  @All(':url(*)')
-  sendProxy(@Param('url') url: string, @Req() req: Request):Promise<any> {
+   @Get(':url(*)')
+   async sendProxy(@Param('url') url: string, @Req() req: Request):Promise<any> {
     //let query = req.query;
 
     let configReq: AxiosRequestConfig = {
@@ -43,11 +43,8 @@ export class ProxyController {
     };
     
 
-    return this.http.request(configReq).toPromise()
-    .then(s => s.data);
-    
-
-  
+    const s = await this.http.request(configReq).toPromise();
+    return s.data;
   }
 
  
