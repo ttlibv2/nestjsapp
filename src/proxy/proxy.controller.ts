@@ -2,6 +2,9 @@ import { HttpService } from '@nestjs/axios';
 import { All, Controller, Param, Req, Res} from '@nestjs/common';
 import {Request, Response} from 'express';
 import {AxiosRequestConfig, AxiosResponse, AxiosError} from 'axios';
+import { Observable, Observer, of, throwError, pipe, interval, empty } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
+import { fromEvent } from 'rxjs';
 
 function assign(target: any, source: any, noSetFnc?: (key: string, value: any) => boolean) {
   noSetFnc = noSetFnc || (() => true);
@@ -37,8 +40,11 @@ export class ProxyController {
       headers: getHeaderFromRequest(req.headers)
     };
 
-    let resp: AxiosResponse = await this.http.request(configReq)
-      .toPromise().catch((e:AxiosError) =>  e.response);
+    let resp = await this.http.request(configReq).pipe(
+      catchError((e: AxiosError) => {
+        console.log(e.toJSON());
+        return of(e.response);
+      })).toPromise();
 
     return res.status(resp.status)
       .header(resp.headers)
