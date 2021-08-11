@@ -43,7 +43,7 @@ export class ProxyController {
     
 
     return this.http.request(configReq).toPromise()
-      .then(s => s.status)
+      .then(s => Promise.resolve(s.status))
       .catch(() => {
         console.log(`error url: ${url}`);
         return Promise.reject('xay ra loi: 500');
