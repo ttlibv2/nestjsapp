@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { All, Controller, Param, Req, Res} from '@nestjs/common';
+import { All, Controller, Get, Param, Query, Req, Res} from '@nestjs/common';
 import {Request, Response} from 'express';
 import {AxiosRequestConfig, AxiosResponse, AxiosError} from 'axios';
 import { Observable, Observer, of, throwError, pipe, interval, empty } from 'rxjs';
@@ -16,9 +16,13 @@ function assign(target: any, source: any, noSetFnc?: (key: string, value: any) =
 }
 
 function getHeaderFromRequest(header: any) {
-  let headerIdDel = ['host', 'x-real-ip', 'x-forwarded-host', 'x-forwarded-for',  'x-forwarded-port', 
+  let headerIdDel = ['host', 'x-real-ip', 
+  'x-forwarded-host', 'x-forwarded-for',  'x-forwarded-port', 
   'x-forwarded-proto', 'x-scheme', 'x-original-forwarded-for',
-   'cf-ipcountry', 'cf-ray', 'cf-visitor', 'cf-ew-via', 'cdn-loop', 'cf-connecting-ip'
+  'true-client-ip','connection',
+   'cf-ipcountry', 'cf-ray', 'cf-visitor', 'cf-ew-via', 
+   'cdn-loop', 'cf-connecting-ip', 'cf-worker',
+   'sec-ch-ua'
   ];
   return assign({}, header, (k:string) => headerIdDel.includes(k));
 }
@@ -30,24 +34,31 @@ export class ProxyController {
   constructor(private http: HttpService) {}
 
 
-  @All(':url(*)')
+  @Get(':url(*)')
   async sendProxy(@Param('url') url: string, @Req() req: Request, @Res() res: Response) {
 
+    let headers = {
+      'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36'
+    };
     let configReq: AxiosRequestConfig = {
       method: 'get',
       url: url,
-      params: req.query,
-      headers: getHeaderFromRequest(req.headers)
+      headers: headers
+      //params: req.query,
+      //headers: getHeaderFromRequest(req.headers)
     };
+    
+    console.log(url);
 
     let resp = await this.http.request(configReq).pipe(
       catchError((e: AxiosError) => {
-        console.log(e.toJSON());
-        return of(e.response);
+        console.log(e);
+        
+        return of({status: 500, data: 'error server'})
       })).toPromise();
 
-    return res.status(resp.status)
-      .header(resp.headers)
+    return res//.status(resp.status)
+     // .header(resp.headers)
       .send(resp.data);
   }
 
