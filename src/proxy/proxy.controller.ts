@@ -46,7 +46,7 @@ export class ProxyController {
       .then(s => Promise.resolve(s.status))
       .catch(() => {
         console.log(`error url: ${url}`);
-        return Promise.reject('xay ra loi: 500');
+        //return Promise.reject('xay ra loi: 500');
       })
     
 
