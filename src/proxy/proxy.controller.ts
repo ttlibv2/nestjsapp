@@ -48,9 +48,9 @@ export class ProxyController {
 
     let ss = await this.http.request(configReq).toPromise()
     .catch((e: AxiosError) => {
-      console.log(e.toJSON());
+      
       let req: Request = e.request;
-      return Promise.resolve({
+      let log = {
         data: {
           config: {
             headers: e.config.headers,
@@ -67,10 +67,13 @@ export class ProxyController {
             status: req.statusCode
           }
         }
-      });
+      };
+
+      console.log(log);
+      return Promise.resolve(log);
     });
 
-    return {configReq, data: ss.data};
+    return ss;
   }
 
  
