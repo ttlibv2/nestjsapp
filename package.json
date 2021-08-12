@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "description": "",
   "license": "MIT",
-  "main":"dist/main.js",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -32,10 +31,9 @@
     "rxjs": "6.6.7",
     "webpack": "5.50.0",
     "webpack-node-externals": "3.0.0",
-     "@nestjs/cli": "^8.0.0"
+    "@nestjs/cli": "^8.0.0"
   },
   "devDependencies": {
-   
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
     "@types/express": "^4.17.13",

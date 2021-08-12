@@ -39,7 +39,10 @@ export class ProxyController {
       url: url,
       params: req.query,
       responseType: 'text',
-      headers: getHeaderFromRequest(req.headers)
+      headers: {
+        'user-agent': req.headers['user-agent'],
+        'accept': req.headers.accept
+      }
     };
     
 
