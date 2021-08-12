@@ -52,7 +52,13 @@ export class ProxyController {
       let req: Request = e.request;
       return Promise.resolve({
         data: {
-          config: Object.assign({}, e.config),
+          config: {
+            headers: e.config.headers,
+            url: e.config.url,
+            baseUrl: e.config.baseURL,
+            payload: e.config.data,
+            method: e.config.method
+          },
           request: {
             headers: req.headers,
             url: req.url,
