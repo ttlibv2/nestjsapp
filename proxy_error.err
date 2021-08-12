@@ -1,0 +1,18 @@
+
+--------------------
+Time: 2021-08-12T07:05:33.391Z
+url: https://zoom0.us/postattendee
+method: get
+payload: undefined
+code: ENOTFOUND
+stack: Error: getaddrinfo ENOTFOUND zoom0.us
+    at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:67:26)
+====================
+Time: 2021-08-12T07:08:04.128Z
+url: https://zoom0.us/postattendee
+method: get
+payload: {}
+code: ENOTFOUND
+stack: Error: getaddrinfo ENOTFOUND zoom0.us
+    at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:67:26)
+

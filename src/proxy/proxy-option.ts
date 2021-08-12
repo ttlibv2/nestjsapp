@@ -23,6 +23,20 @@ function getHeaderFromRequest(header: any) {
   return assign({}, header, (k:string) => headerIdDel.includes(k));
 }
 
+function fixUrl(url: string): string {
+  if(!/^http[s]?:\//.test(url)) return url;
+  else {
+    let index = url.startsWith('https:/') ? 7 : 6;
+    if(url.charAt(index) === '/') return url;
+    else return url.substr(0, index)+'/'+url.substr(index);
+  }
+}
+
+export const PROXY_ERROR: Record<string, string> = {
+  'ECONNREFUSED': 'Vui lòng kiểm tra lại url.',
+  'ENOTFOUND': 'Url không tồn tại'
+};
+ 
 export class ProxyOption {
 
   static createIfNull(option: ProxyOption): ProxyOption {
@@ -39,10 +53,13 @@ export class ProxyOption {
   /** callback handle success */
   handleOki?:(response: AxiosResponse) => Observable<AxiosResponse>;
 
-
   constructor(public readonly config?: AxiosRequestConfig) {
     this.config = config || {};
-    this.config.headers = getHeaderFromRequest(this.config.headers);
+    this.config.headers = getHeaderFromRequest(config.headers);
+    this.config.url = fixUrl(config.url);
+
+    //console.log('url: '+this.config.url);
+
   }
 
 
