@@ -1,1 +1,1 @@
-export class ProxyOption {}
+export class ProxyOption { }
