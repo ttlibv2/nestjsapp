@@ -46,8 +46,8 @@ export class ProxyController {
     };
     
 
-    //await this.http.request(configReq).toPromise();
-    return configReq;
+    let ss = await this.http.request(configReq).toPromise();
+    return {configReq, data: ss.data, status: ss.status};
   }
 
  
