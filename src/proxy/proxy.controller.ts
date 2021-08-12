@@ -50,7 +50,7 @@ export class ProxyController {
     .catch((e: AxiosError) => {
       console.log(e.toJSON());
       let req: Request = e.request;
-      return {
+      return Promise.resolve({
         data: {
           config: Object.assign({}, e.config),
           request: {
@@ -61,8 +61,9 @@ export class ProxyController {
             status: req.statusCode
           }
         }
-      };
+      });
     });
+
     return {configReq, data: ss.data};
   }
 
