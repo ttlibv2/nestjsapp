@@ -33,47 +33,18 @@ export class ProxyController {
    @Get(':url(*)')
    async sendProxy(@Param('url') url: string, @Req() req: Request):Promise<any> {
     //let query = req.query;
+    url = 'https://ts24.com.vn/';
 
     let configReq: AxiosRequestConfig = {
       method: 'get',
       url: url,
-      params: req.query,
-      responseType: 'text',
-      headers: {
-        'user-agent': req.headers['user-agent'],
-        'accept': req.headers.accept
-      }
+      params: req.query
     };
     
 
-    let ss = await this.http.request(configReq).toPromise()
-    .catch((e: AxiosError) => {
-      
-      let req: Request = e.request;
-      let log = {
-        data: {
-          config: {
-            headers: e.config.headers,
-            url: e.config.url,
-            baseUrl: e.config.baseURL,
-            payload: e.config.data,
-            method: e.config.method
-          },
-          request: {
-            headers: req.headers,
-            url: req.url,
-            baseUrl: req.baseUrl,
-            query: req.query,
-            status: req.statusCode
-          }
-        }
-      };
+    let ss = await this.http.request(configReq).toPromise();
 
-      console.log(log);
-      return Promise.resolve(log);
-    });
-
-    return ss;
+    return ss.data;
   }
 
  
