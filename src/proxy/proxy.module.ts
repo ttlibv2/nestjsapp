@@ -1,6 +1,7 @@
 import { HttpModuleOptions, Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { ProxyController } from './proxy.controller';
+import { ProxyService } from './proxy.service';
 import * as https from 'https';
 
 const httpModuleOption: HttpModuleOptions = {
@@ -14,6 +15,6 @@ const httpModuleOption: HttpModuleOptions = {
 @Module({
  imports:[ HttpModule.register(httpModuleOption)],
   controllers: [ProxyController],
-  exports: []
+  providers: [ProxyService]
 })
 export class ProxyModule {}
